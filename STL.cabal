@@ -3,7 +3,7 @@ name:                STL-Linear
 version:             0.0.0
 synopsis:            See README for more info
 description:         See README for more info
-license:             GPL-2
+license:             GPL-3
 license-file:        LICENSE
 author:              timput
 maintainer:          tim@timput.com
