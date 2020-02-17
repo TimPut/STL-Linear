@@ -23,7 +23,12 @@ Binary and ASCII de/serialization for STL files
 
 {-# LANGUAGE ApplicativeDo     #-}
 {-# LANGUAGE OverloadedStrings #-}
--- module Graphics.STL.Parser where
+module Graphics.STL ( STL(..)
+                    , Header
+                    , Triangle
+                    , parseSTL
+                    , unparseSTL
+                    ) where
 
 import           Control.Monad                    ((>=>))
 import           Data.Attoparsec.ByteString.Char8
@@ -32,19 +37,22 @@ import           Data.Binary.Get
 import           Data.Binary.Put
 import qualified Data.ByteString                  as B hiding (pack)
 import           Data.ByteString.Char8            (pack)
-import qualified Data.ByteString.Lazy             as BL
 import           Data.Scientific                  (toRealFloat)
 import qualified Data.Vector.Unboxed              as V
 import           Data.Word
 import           Linear
 
--- Local imports
-import           Types
+data STL = STL { header :: B.ByteString, numFacets :: Word32, triangles :: V.Vector Triangle }
+  deriving (Show, Eq)
+
+type Header = B.ByteString
+
+type Triangle = V4 (V3 Float)
 
 getHeaderB :: Get Header
 getHeaderB = do
-  header <- getByteString 80
-  return header
+  header' <- getByteString 80
+  return header'
 
 getVertexB :: Get (V3 Float)
 getVertexB = do
@@ -64,21 +72,21 @@ getTriangleB = do
 
 getSTL :: Get STL
 getSTL = do
-  header <- getHeaderB
-  numFacets <- getWord32le
-  triangles <- V.replicateM (fromIntegral numFacets) getTriangleB
-  return $ STL header numFacets triangles
+  header' <- getHeaderB
+  numFacets' <- getWord32le
+  triangles' <- V.replicateM (fromIntegral numFacets') getTriangleB
+  return $ STL header' numFacets' triangles'
 
 
 instance Binary STL where
     put (STL h n ts) = do
                       let h' = B.take 80 $ h <> B.replicate 80 0
-                      putByteString h
+                      putByteString h'
                       putWord32le n
                       traverse (putTriangle >=> \_ -> (putWord16le 0)) (V.toList ts)
                       return ()
       where
-        -- TODO: dry this out, now that you understand the put monad.
+        -- TODO: dry this out
         putTriangle (V4 (V3 a b c) (V3 a' b' c') (V3 a'' b'' c'') (V3 a''' b''' c''')) = do
                          putFloatle a
                          putFloatle b
@@ -139,14 +147,14 @@ parseV3 = do
 parseSTL :: Parser STL
 parseSTL = do
   name <- parseHeader
-  triangles <- V.fromList <$> many1' parseFacet
+  triangles' <- V.fromList <$> many1' parseFacet
   string "endsolid" *> many1' anyChar  *> endOfInput
-  return (STL name (fromIntegral $ V.length triangles) triangles)
+  return (STL name (fromIntegral $ V.length triangles') triangles')
 
 unparseSTL :: STL -> B.ByteString
-unparseSTL (STL name numFacets triangles) =
+unparseSTL (STL name _numFacets' triangles') =
     "solid " <> name <> "\n" <>
-    B.concat (fmap unparseFacet (V.toList triangles)) <>
+    B.concat (fmap unparseFacet (V.toList triangles')) <>
     "endsolid " <> name
 
 unparseFacet :: Triangle -> B.ByteString

@@ -16,11 +16,16 @@ tested-with:         GHC == 8.6.4
 
 library
   hs-source-dirs:      src
-  exposed-modules:     STL
+  exposed-modules:     Graphics.STL
                        
 
   build-depends:       base ^>= 4.12.0.0
-                     
+                     , linear
+                     , vector
+                     , bytestring
+                     , binary
+                     , attoparsec
+                     , scientific
 
   ghc-options:         -Wall
                        -Wincomplete-uni-patterns
