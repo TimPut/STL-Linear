@@ -77,7 +77,6 @@ getSTL = do
   triangles' <- V.replicateM (fromIntegral numFacets') getTriangleB
   return $ STL header' numFacets' triangles'
 
-
 instance Binary STL where
     put (STL h n ts) = do
                       let h' = B.take 80 $ h <> B.replicate 80 0
@@ -88,19 +87,19 @@ instance Binary STL where
       where
         -- TODO: dry this out
         putTriangle (V4 (V3 a b c) (V3 a' b' c') (V3 a'' b'' c'') (V3 a''' b''' c''')) = do
-                         putFloatle a
-                         putFloatle b
-                         putFloatle c
-                         putFloatle a'
-                         putFloatle b'
-                         putFloatle c'
-                         putFloatle a''
-                         putFloatle b''
-                         putFloatle c''
-                         putFloatle a'''
-                         putFloatle b'''
-                         putFloatle c'''
-
+                         sequenceA $ fmap putFloatle [ a
+                                                     , b
+                                                     , c
+                                                     , a'
+                                                     , b'
+                                                     , c'
+                                                     , a''
+                                                     , b''
+                                                     , c''
+                                                     , a'''
+                                                     , b'''
+                                                     , c'''
+                                                     ]
     get = getSTL
 
 parseHeader :: Parser B.ByteString
