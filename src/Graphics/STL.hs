@@ -1,4 +1,4 @@
--- Parser.hs ---
+-- STL.hs ---
 
 -- Copyright (C) 2020 tim put <tim@timput.com>
 
@@ -22,7 +22,10 @@ Binary and ASCII de/serialization for STL files
 -}
 
 {-# LANGUAGE ApplicativeDo     #-}
+{-# LANGUAGE DeriveAnyClass    #-}
+{-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE OverloadedStrings #-}
+
 module Graphics.STL ( STL(..)
                     , Header
                     , Triangle
@@ -42,8 +45,15 @@ import qualified Data.Vector.Unboxed              as V
 import           Data.Word
 import           Linear
 
-data STL = STL { header :: B.ByteString, numFacets :: Word32, triangles :: V.Vector Triangle }
-  deriving (Show, Eq)
+import           Control.DeepSeq
+import           GHC.Generics                     (Generic)
+
+data STL = STL
+    { header    :: B.ByteString
+    , numFacets :: Word32
+    , triangles :: V.Vector Triangle
+    }
+    deriving (Show, Eq, Generic, NFData)
 
 type Header = B.ByteString
 
@@ -79,7 +89,7 @@ getSTL = do
 
 instance Binary STL where
     put (STL h n ts) = do
-                      let h' = B.take 80 $ h <> B.replicate 80 0
+                      let h' = B.take 80 $ h <> B.replicate 80 32
                       putByteString h'
                       putWord32le n
                       traverse (putTriangle >=> \_ -> (putWord16le 0)) (V.toList ts)
@@ -151,10 +161,10 @@ parseSTL = do
   return (STL name (fromIntegral $ V.length triangles') triangles')
 
 unparseSTL :: STL -> B.ByteString
-unparseSTL (STL name _numFacets' triangles') =
-    "solid " <> name <> "\n" <>
+unparseSTL (STL name _numFacets' triangles') = let shortName = B.takeWhile (/= 0) name in
+    "solid " <> shortName <> "\n" <>
     B.concat (fmap unparseFacet (V.toList triangles')) <>
-    "endsolid " <> name
+    "endsolid " <> shortName
 
 unparseFacet :: Triangle -> B.ByteString
 unparseFacet (V4 n a b c) =
