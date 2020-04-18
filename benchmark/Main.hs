@@ -20,7 +20,11 @@ import           GHC.Generics               (Generic)
 
 
 main :: IO ()
-main = defaultMainWith (defaultConfig {timeLimit = Just 0, quickMode = True})
+main = do
+  stl <- B.readFile "./benchmark/3DBenchy.stl"
+  let r = decode (fromStrict stl) :: STL
+  B.writeFile "./benchmark/ASCII3DBenchy.stl" (unparseSTL r)
+  defaultMainWith (defaultConfig {timeLimit = Just 0, quickMode = True})
        [ env setupEnv $
        \ ~(ascii,binary,text) -> bgroup "main"
                            [ bgroup "ascii" [
