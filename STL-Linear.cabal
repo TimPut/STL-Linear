@@ -18,7 +18,7 @@ library
   hs-source-dirs:      src
   exposed-modules:     Graphics.STL
 
-  build-depends:       base ^>= 4.12.0.0
+  build-depends:       base >= 4.12.0.0
                      , linear
                      , vector
                      , bytestring
@@ -44,7 +44,7 @@ test-suite STL-test
   hs-source-dirs:      test
   main-is:             Spec.hs
 
-  build-depends:       base ^>= 4.12.0.0
+  build-depends:       base >= 4.12.0.0
                      , STL-Linear
 
   ghc-options:         -Wall
@@ -67,7 +67,7 @@ benchmark STL-benchmark
   hs-source-dirs:      benchmark
   main-is:             Main.hs
 
-  build-depends:       base ^>= 4.12.0.0
+  build-depends:       base >= 4.12.0.0
                      , gauge
                      , STL-Linear
                      , STL
