@@ -62,7 +62,8 @@ type Triangle = V4 (V3 Float)
 getHeaderB :: Get Header
 getHeaderB = do
   header' <- getByteString 80
-  return header'
+  return $! header'
+{-# INLINE getHeaderB #-}
 
 getVertexB :: Get (V3 Float)
 getVertexB = do
@@ -70,6 +71,7 @@ getVertexB = do
    y <- getFloatle
    z <- getFloatle
    return $! (V3 x y z)
+{-# INLINE getVertexB #-}
 
 getTriangleB :: Get Triangle
 getTriangleB = do
@@ -79,13 +81,15 @@ getTriangleB = do
   c <- getVertexB
   _ <- getWord16le -- two-byte attribute
   return $! V4 n a b c
+{-# INLINE getTriangleB #-}
 
 getSTL :: Get STL
 getSTL = do
   header' <- getHeaderB
   numFacets' <- getWord32le
   triangles' <- V.replicateM (fromIntegral numFacets') getTriangleB
-  return $ STL header' numFacets' triangles'
+  return $! STL header' numFacets' triangles'
+{-# INLINE getSTL #-}
 
 instance Binary STL where
     put (STL h n ts) = do
