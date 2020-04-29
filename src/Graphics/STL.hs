@@ -114,6 +114,7 @@ instance Binary STL where
                                                      , b'''
                                                      , c'''
                                                      ]
+        {-# INLINE putTriangle #-}
     get = getSTL
 
 parseHeader :: Parser B.ByteString
