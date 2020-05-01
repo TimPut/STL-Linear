@@ -57,6 +57,8 @@ data STL = STL
 
 type Header = B.ByteString
 
+-- Triangles are composed of a normal vector represented
+-- as V3 Float, and three vertices represented similarly
 type Triangle = V4 (V3 Float)
 
 getHeaderB :: Get Header
