@@ -55,8 +55,7 @@ data STL = STL
     }
     deriving (Show, Eq, Generic, NFData)
 
--- | STL header
---
+-- |
 -- The ASCII STL standard allows a single arbitrarily long line as a
 -- header, while the binary STL standard uses a fixed 80 byte header.
 -- This means that conversions between the two are not exact.
@@ -69,8 +68,7 @@ data STL = STL
 -- read in without triming any trailing zero bytes.
 type Header = B.ByteString
 
--- | STL Triangles
---
+-- |
 -- Triangles are composed of a normal vector represented as V3 Float,
 -- and three vertices represented similarly.
 --
@@ -110,8 +108,7 @@ getSTL = do
   return $! STL header' numFacets' triangles'
 {-# INLINE getSTL #-}
 
--- | Binary instances
---
+-- |
 -- >>> import Data.Binary (Binary, encode, decode)
 -- >>> import Data.ByteString.Lazy (readFile, writeFile)
 --
