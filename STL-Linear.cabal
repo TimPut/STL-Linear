@@ -1,13 +1,13 @@
 cabal-version:       2.0
 name:                STL-Linear
-version:             0.0.0
+version:             0.1.0
 synopsis:            See README for more info
 description:         See README for more info
 license:             GPL-3
 license-file:        LICENSE
 author:              timput
-maintainer:          tim@timput.com
-copyright:           2020 timput
+maintainer:          timput@gmail.com
+copyright:           2021 timput
 category:            Graphics
 build-type:          Simple
 extra-doc-files:     README.md
