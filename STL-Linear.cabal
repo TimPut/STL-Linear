@@ -72,7 +72,7 @@ benchmark STL-benchmark
   build-depends:       base >= 4.12.0.0
                      , gauge
                      , STL-Linear
-                     , STL
+                     -- , STL
                      , attoparsec
                      , bytestring
                      , linear
