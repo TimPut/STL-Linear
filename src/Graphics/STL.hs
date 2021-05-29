@@ -55,10 +55,27 @@ data STL = STL
     }
     deriving (Show, Eq, Generic, NFData)
 
+-- | STL header
+--
+-- The ASCII STL standard allows a single arbitrarily long line as a
+-- header, while the binary STL standard uses a fixed 80 byte header.
+-- This means that conversions between the two are not exact.
+--
+-- When serializing an STL to binary, we retain the first 80 bytes of
+-- the STL's header, zero padded if necessary, while when serializing
+-- an STL to ASCII we drop any trailing zero bytes.
+--
+-- Note that when parsing a binary STL, the full 80 byte header is
+-- read in without triming any trailing zero bytes.
 type Header = B.ByteString
 
--- Triangles are composed of a normal vector represented
--- as V3 Float, and three vertices represented similarly
+-- | STL Triangles
+--
+-- Triangles are composed of a normal vector represented as V3 Float,
+-- and three vertices represented similarly.
+--
+-- Note that the normal is stored as the first component of the V4,
+-- while the remaining three components store the vertices.
 type Triangle = V4 (V3 Float)
 
 getHeaderB :: Get Header
@@ -93,6 +110,13 @@ getSTL = do
   return $! STL header' numFacets' triangles'
 {-# INLINE getSTL #-}
 
+-- | Binary instances
+--
+-- >>> import Data.Binary (Binary, encode, decode)
+-- >>> import Data.ByteString.Lazy (readFile, writeFile)
+--
+-- >>> stl <- decode $ readFile "./example.stl" :: IO STL
+-- >>> writeFile "./exampleOut.stl" (encode stl)
 instance Binary STL where
     put (STL h n ts) = do
                       let h' = B.take 80 $ h <> B.replicate 80 32
