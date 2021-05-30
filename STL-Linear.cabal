@@ -20,7 +20,7 @@ library
                      , Graphics.STL.Lazy
                      , Graphics.STL.Common
 
-  build-depends:       base >= 4.12.0.0
+  build-depends:       base >= 4.12.0.0 && < 4.16
                      , attoparsec           >= 0.13.2
                      , bytestring           >= 0.10.12
                      , deepseq              >= 1.4.4
@@ -47,7 +47,7 @@ test-suite STL-test
   hs-source-dirs:      test
   main-is:             Spec.hs
 
-  build-depends:       base >= 4.12.0.0
+  build-depends:       base
                      , STL-Linear
                      , binary
                      , bytestring
@@ -74,7 +74,7 @@ benchmark STL-benchmark
   hs-source-dirs:      benchmark
   main-is:             Main.hs
 
-  build-depends:       base >= 4.12.0.0
+  build-depends:       base
                      , gauge >= 0.2.5
                      , STL-Linear
                      , attoparsec
