@@ -1,7 +1,18 @@
 {-# LANGUAGE ApplicativeDo     #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-module Graphics.STL.Common where
+module Graphics.STL.Common ( Header
+                           , Triangle
+                           , Normal
+                           , getHeaderB
+                           , getVertexB
+                           , getTriangleB
+                           , parseHeader
+                           , parseFacet
+                           , parseV3
+                           , unparseFacet
+                           , unparseV3
+                           ) where
 
 import           Data.Attoparsec.ByteString.Char8
 import           Data.Binary.Get
