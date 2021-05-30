@@ -21,13 +21,13 @@ library
                      , Graphics.STL.Common
 
   build-depends:       base >= 4.12.0.0 && < 4.16
-                     , attoparsec           >= 0.13.2
-                     , bytestring           >= 0.10.12
-                     , deepseq              >= 1.4.4
-                     , scientific           >= 0.3.6
-                     , binary               >= 0.8.8
-                     , linear               >= 1.21.5
-                     , vector               >= 0.12.3
+                     , attoparsec           >= 0.13.2 && < 0.14
+                     , bytestring           >= 0.10.12 && < 0.11
+                     , deepseq              >= 1.4.4 && < 1.5
+                     , scientific           >= 0.3.6 && < 0.4
+                     , binary               >= 0.8.8 && < 0.9
+                     , linear               >= 1.21.5 && < 1.22
+                     , vector               >= 0.12.3 && < 0.13
 
   ghc-options:         -Wall
                        -Wincomplete-uni-patterns
