@@ -1,9 +1,9 @@
 cabal-version:       2.0
 name:                STL-Linear
 version:             0.1.0.0
-synopsis:            See README for more info
-description:         See README for more info
-license:             GPL-3
+synopsis:            STL Serialization and Deserialization
+description:         Provides fast serialization and deserialization for both binary and ASCII STL 3D model files.
+license:             MIT
 license-file:        LICENSE
 author:              timput
 maintainer:          timput@gmail.com
